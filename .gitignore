@@ -13,5 +13,4 @@ __pycache__/
 *$py.class
 
 # Secrets / Auth
-auth.txt
 .env
