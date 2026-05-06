@@ -1,0 +1,1 @@
+print("Fallout RPG Discord Bot!")
