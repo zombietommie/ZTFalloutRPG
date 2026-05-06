@@ -6,7 +6,8 @@ import os
 from dotenv import load_dotenv
 import logging
 
-from src import dice, database
+from src import dice
+from src import database_pg as database
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 

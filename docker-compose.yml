@@ -1,0 +1,29 @@
+services:
+  bot:
+    build: .
+    container_name: fallout_bot
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      # We override the localhost URL to use the internal docker network name 'db'
+      - DATABASE_URL=postgresql://fallout_admin:supersecretpassword@db:5432/fallout_rpg
+
+  db:
+    image: postgres:18
+    container_name: fallout_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: fallout_admin
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: fallout_rpg
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
