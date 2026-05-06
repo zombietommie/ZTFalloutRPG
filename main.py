@@ -4,8 +4,11 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+import logging
 
 from src import dice, database
+
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -22,6 +25,7 @@ async def on_ready():
     print(f'Database setting up!')
     database.setup_database()
     print(f'We have logged in as {bot.user}')
+    print(f'discord.py API version: {discord.__version__}')
 
 @bot.tree.command(name="hello", description="Saying Hello!")
 async def hello(interaction: discord.Interaction):
@@ -41,4 +45,4 @@ api_token = os.getenv("API_TOKEN")
 if api_token is None:
     print("Error: API_TOKEN environment variable not set.")
 else:
-    bot.run(api_token)
+    bot.run(api_token, log_handler=handler, log_level=logging.DEBUG)
