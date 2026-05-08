@@ -39,17 +39,21 @@ async def caps(interaction: discord.Interaction):
 
 @bot.tree.command(name="award_caps", description="[GM-ONLY] Award caps to a player.")
 @app_commands.describe(
-    member="The player to award caps to",
+    user_to_award="The player to award caps to",
     amount="The amount of caps to award"
 )
 @app_commands.checks.has_permissions(administrator=True)
-async def award_caps(interaction: discord.Interaction, member: discord.Member, amount: int):
+async def award_caps(interaction: discord.Interaction, user_to_award: discord.User, amount: int):
     if amount <= 0:
         await interaction.response.send_message("You must award a positive number of caps.", ephemeral=True)
         return
 
-    database.award_caps(member.id, amount)
-    await interaction.response.send_message(f"Awarded {amount} caps to {member.mention}! You now have {database.get_player_caps(member.id)} caps")
+    # Check if user exist in DB
+    database.insert_player(user_to_award.id, user_to_award.name, 0)
+
+    # Award the caps
+    database.award_caps(user_to_award.id, amount)
+    await interaction.response.send_message(f"Awarded {amount} caps to {user_to_award.mention}! You now have {database.get_player_caps(user_to_award.id)} caps")
 
 @bot.tree.command(name="secret", description="Only you can see this!!!")
 async def secret(interaction: discord.Interaction):
