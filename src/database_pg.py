@@ -66,15 +66,15 @@ def award_caps(user_id, caps):
     conn.commit()
     conn.close()
 
-def remove_caps_clamped(user_id, amount):
+def remove_caps_clamped(user_id: int, amount: int) -> int:
     """Remove caps from a user, clamping the result to a minimum of 0.
     
     This function performs an atomic UPDATE operation that subtracts the specified
     amount from the user's cap balance, ensuring the result never goes below 0.
     
-    :param user_id: The Discord user ID (int)
-    :param amount: Number of caps to remove (int)
-    :return: The new cap value after removal (int)
+    :param user_id: The Discord user ID
+    :param amount: Number of caps to remove
+    :return: The new cap value after removal
     
     Note: This assumes the user exists in the database. The caller should ensure
     the user is inserted via insert_player() before calling this function.
@@ -82,20 +82,22 @@ def remove_caps_clamped(user_id, amount):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute('''
-        UPDATE players
-        SET cap = GREATEST(cap - %s, 0)
-        WHERE user_id = %s
-        RETURNING cap
-    ''', (amount, user_id))
-    result = cursor.fetchone()
-    conn.commit()
-    conn.close()
-    
-    if result:
-        return result[0]
-    # Return 0 if user doesn't exist (shouldn't happen if insert_player was called first)
-    return 0
+    try:
+        cursor.execute('''
+            UPDATE players
+            SET cap = GREATEST(cap - %s, 0)
+            WHERE user_id = %s
+            RETURNING cap
+        ''', (amount, user_id))
+        result = cursor.fetchone()
+        conn.commit()
+        
+        if result:
+            return result[0]
+        # Return 0 if user doesn't exist (shouldn't happen if insert_player was called first)
+        return 0
+    finally:
+        conn.close()
 
 
 def set_player_caps(user_id, cap):
