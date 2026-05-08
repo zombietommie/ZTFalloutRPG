@@ -79,7 +79,7 @@ async def remove_caps(interaction: discord.Interaction, user_to_remove: discord.
     database.award_caps(user_to_remove.id, -amount)
     # Check if user_to_remove.id cap amount is less than 0 set to 0
     if database.get_player_caps(user_to_remove.id) < 0:
-        database.award_caps(user_to_remove.id, -database.get_player_caps(user_to_remove.id))
+        database.set_player_caps(user_to_remove.id, 0)
     await interaction.response.send_message(f"Removed {amount} caps from {user_to_remove.mention}! You now have {database.get_player_caps(user_to_remove.id)} caps")
 
 # Roll 2d20s

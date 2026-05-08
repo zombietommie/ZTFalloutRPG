@@ -1,6 +1,9 @@
 import psycopg2
 import os
 
+from psycopg2._psycopg import cursor
+
+
 def get_connection():
     # We will get the connection URL from the environment variables
     # The cloud provider will give you a URL like: postgresql://user:password@host:port/dbname
@@ -62,5 +65,18 @@ def award_caps(user_id, caps):
         SET cap = cap + %s 
         WHERE user_id = %s
     ''', (caps, user_id))
+    conn.commit()
+    conn.close()
+
+
+def set_player_caps(user_id, cap):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        UPDATE players
+        SET cap = %s
+        WHERE user_id = %s
+    ''', (cap, user_id))
     conn.commit()
     conn.close()
