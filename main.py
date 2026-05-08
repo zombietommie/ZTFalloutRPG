@@ -13,7 +13,6 @@ from src import database_pg as database
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
 intents = discord.Intents.default()
-intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
@@ -82,7 +81,7 @@ async def remove_caps(interaction: discord.Interaction, user_to_remove: discord.
 # Roll 2d20s
 @bot.tree.command(name="roll", description="Roll 2d20s")
 async def roll(interaction: discord.Interaction):
-    await interaction.response.send_message(f"Rolling.... {dice.rollDice()}")
+    await interaction.response.send_message(f"Rolling.... {dice.roll_dice()}")
 
 # Testing secret
 @bot.tree.command(name="secret", description="Only you can see this!!!")
