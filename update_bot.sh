@@ -2,7 +2,7 @@
 # A simple script to pull the latest code and restart the bot
 
 echo "Pulling latest code from GitHub..."
-git pull origin main
+git pull origin master
 
 echo "Rebuilding and restarting the Docker containers..."
 # --build ensures any new dependencies in requirements.txt or changes to the Dockerfile are applied
