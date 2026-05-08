@@ -1,8 +1,6 @@
 import psycopg2
 import os
 
-from psycopg2._psycopg import cursor
-
 
 def get_connection():
     # We will get the connection URL from the environment variables
