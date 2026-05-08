@@ -55,6 +55,10 @@ async def award_caps(interaction: discord.Interaction, user_to_award: discord.Us
     database.award_caps(user_to_award.id, amount)
     await interaction.response.send_message(f"Awarded {amount} caps to {user_to_award.mention}! You now have {database.get_player_caps(user_to_award.id)} caps")
 
+@bot.tree.command(name="roll", description="Roll 2d20s")
+async def roll(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Rolling.... {dice.rollDice()}")
+
 @bot.tree.command(name="secret", description="Only you can see this!!!")
 async def secret(interaction: discord.Interaction):
     await interaction.response.send_message("This is a private message!",ephemeral=True)
