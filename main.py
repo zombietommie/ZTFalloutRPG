@@ -49,7 +49,7 @@ async def award_caps(interaction: discord.Interaction, member: discord.Member, a
         return
 
     database.award_caps(member.id, amount)
-    await interaction.response.send_message(f"Awarded {amount} caps to {member.mention}!")
+    await interaction.response.send_message(f"Awarded {amount} caps to {member.mention}! You now have {database.get_player_caps(member.id)} caps")
 
 @bot.tree.command(name="secret", description="Only you can see this!!!")
 async def secret(interaction: discord.Interaction):
