@@ -3,6 +3,7 @@ print("Fallout RPG Discord Bot!")
 import discord
 from discord.ext import commands
 import os
+from discord import app_commands
 from dotenv import load_dotenv
 import logging
 
@@ -35,6 +36,20 @@ async def hello(interaction: discord.Interaction):
 @bot.tree.command(name="caps", description="View how much caps you have.")
 async def caps(interaction: discord.Interaction):
     await interaction.response.send_message(f'{interaction.user.mention} you have {database.get_player_caps(interaction.user.id)} caps!')
+
+@bot.tree.command(name="award_caps", description="[GM-ONLY] Award caps to a player.")
+@app_commands.describe(
+    member="The player to award caps to",
+    amount="The amount of caps to award"
+)
+@app_commands.checks.has_permissions(administrator=True)
+async def award_caps(interaction: discord.Interaction, member: discord.Member, amount: int):
+    if amount <= 0:
+        await interaction.response.send_message("You must award a positive number of caps.", ephemeral=True)
+        return
+
+    database.award_caps(member.id, amount)
+    await interaction.response.send_message(f"Awarded {amount} caps to {member.mention}!")
 
 @bot.tree.command(name="secret", description="Only you can see this!!!")
 async def secret(interaction: discord.Interaction):

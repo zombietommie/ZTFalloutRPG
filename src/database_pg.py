@@ -2,7 +2,7 @@ import psycopg2
 import os
 
 def get_connection():
-    # We will get the connection URL from the environment variables (e.g. .env)
+    # We will get the connection URL from the environment variables
     # The cloud provider will give you a URL like: postgresql://user:password@host:port/dbname
     db_url = os.getenv("DATABASE_URL")
     return psycopg2.connect(db_url)
@@ -13,6 +13,8 @@ def setup_database():
 
     # PostgreSQL uses SERIAL for auto-incrementing integers or BIGINT for Discord IDs
     # and ON CONFLICT instead of INSERT OR IGNORE
+
+    # This is to create a new table if it doesn't exist already.
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS players (
         user_id BIGINT PRIMARY KEY,
@@ -48,5 +50,17 @@ def insert_player(user_id, character_name, caps=0):
         ON CONFLICT (user_id) DO NOTHING
     ''', (user_id, character_name, caps))
 
+    conn.commit()
+    conn.close()
+
+def award_caps(user_id, caps):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        UPDATE players
+        SET cap = cap + %s 
+        WHERE user_id = %s
+    ''', (caps, user_id))
     conn.commit()
     conn.close()
