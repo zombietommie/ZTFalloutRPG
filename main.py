@@ -75,12 +75,9 @@ async def remove_caps(interaction: discord.Interaction, user_to_remove: discord.
     # Check if user exist in DB
     database.insert_player(user_to_remove.id, user_to_remove.name, 0)
 
-    # Remove the caps
-    database.award_caps(user_to_remove.id, -amount)
-    # Check if user_to_remove.id cap amount is less than 0 set to 0
-    if database.get_player_caps(user_to_remove.id) < 0:
-        database.set_player_caps(user_to_remove.id, 0)
-    await interaction.response.send_message(f"Removed {amount} caps from {user_to_remove.mention}! You now have {database.get_player_caps(user_to_remove.id)} caps")
+    # Remove the caps atomically (clamped to 0)
+    new_cap_amount = database.remove_caps_clamped(user_to_remove.id, amount)
+    await interaction.response.send_message(f"Removed {amount} caps from {user_to_remove.mention}! You now have {new_cap_amount} caps")
 
 # Roll 2d20s
 @bot.tree.command(name="roll", description="Roll 2d20s")

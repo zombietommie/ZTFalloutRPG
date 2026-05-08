@@ -66,6 +66,26 @@ def award_caps(user_id, caps):
     conn.commit()
     conn.close()
 
+def remove_caps_clamped(user_id, amount):
+    """Remove caps from a user, clamping the result to a minimum of 0.
+    Returns the new cap value after the operation."""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        UPDATE players
+        SET cap = GREATEST(cap - %s, 0)
+        WHERE user_id = %s
+        RETURNING cap
+    ''', (amount, user_id))
+    result = cursor.fetchone()
+    conn.commit()
+    conn.close()
+    
+    if result:
+        return result[0]
+    return 0
+
 
 def set_player_caps(user_id, cap):
     conn = get_connection()
