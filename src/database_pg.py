@@ -68,7 +68,17 @@ def award_caps(user_id, caps):
 
 def remove_caps_clamped(user_id, amount):
     """Remove caps from a user, clamping the result to a minimum of 0.
-    Returns the new cap value after the operation."""
+    
+    This function performs an atomic UPDATE operation that subtracts the specified
+    amount from the user's cap balance, ensuring the result never goes below 0.
+    
+    :param user_id: The Discord user ID (int)
+    :param amount: Number of caps to remove (int)
+    :return: The new cap value after removal (int)
+    
+    Note: This assumes the user exists in the database. The caller should ensure
+    the user is inserted via insert_player() before calling this function.
+    """
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -84,6 +94,7 @@ def remove_caps_clamped(user_id, amount):
     
     if result:
         return result[0]
+    # Return 0 if user doesn't exist (shouldn't happen if insert_player was called first)
     return 0
 
 
