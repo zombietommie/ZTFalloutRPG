@@ -11,10 +11,10 @@ def view_caps_commands(bot: commands.Bot) -> None:
 
 # award caps
 def award_caps_commands(bot: commands.Bot) -> None:
-    @bot.tree.command(name="award caps", description="[GM-ONLY] Award caps to a player.")
+    @bot.tree.command(name="award_caps", description="[GM-ONLY] Award caps to a player.")
     @app_commands.describe(
         user_to_award="The player to award caps to.",
-        amoutn="The amount of caps to award."
+        amount="The amount of caps to award."
     )
     @app_commands.checks.has_permissions(administrator=True)
     async def award_caps(interaction: discord.Interaction, user_to_award: discord.User, amount: int):
