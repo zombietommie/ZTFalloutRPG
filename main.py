@@ -4,11 +4,13 @@ import os
 from dotenv import load_dotenv
 import logging
 
+from src.hello import hello
 from src.dice import dice_commands
 from src.caps import view_caps_commands
 from src.caps import award_caps_commands
 from src.caps import remove_caps_commands
-from src.hello import hello
+from src.action_points import view_ap_commands
+
 from src import database_pg as database
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -28,11 +30,13 @@ async def on_ready():
     print(f'discord.py API version: {discord.__version__}')
 
 # Commands
+hello(bot)
 dice_commands(bot)
 view_caps_commands(bot)
 award_caps_commands(bot)
 remove_caps_commands(bot)
-hello(bot)
+view_ap_commands(bot)
+
 
 
 def main() -> None:
