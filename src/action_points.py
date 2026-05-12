@@ -17,7 +17,10 @@ from src import database_pg as database
 def view_ap_commands(bot: commands.Bot):
     @bot.tree.command(name="view_ap" , description="Allow to view AP on both sides")
     async def view_ap(interaction: discord.Interaction):
-        await interaction.response.send_message(f"Players AP: {database.get_ap('PLAYER_AP_POOL')} \nGM AP: {database.get_ap('GM_AP_POOL')}")
+        await interaction.response.send_message(
+            f"Players AP: {database.get_ap(database.PLAYER_AP_POOL)} \n"
+            f"GM AP: {database.get_ap(database.GM_AP_POOL)}"
+        )
 
 # Adding AP
 def add_ap_player_commands(bot: commands.Bot):
@@ -30,9 +33,21 @@ def add_ap_player_commands(bot: commands.Bot):
         if amount <= 0:
             await interaction.response.send_message("You must enter a positive number of AP", ephemeral=True)
             return
-        elif database.get_ap('PLAYER_AP_POOL') >= 5:
+
+        current_ap = database.get_ap(database.PLAYER_AP_POOL)
+
+        if current_ap >= database.PLAYER_AP_POOL_MAX:
             await interaction.response.send_message("Player AP Pool maxed out, cannot add!")
             return
 
-        database.add_ap('PLAYER_AP_POOL', amount)
-        await interaction.response.send_message(f"Added {amount} AP to the player pool!\nPlayer AP Pool: {database.get_ap('PLAYER_AP_POOL')}.")
+        new_ap = database.add_ap(database.PLAYER_AP_POOL, amount)
+
+        if current_ap + amount > database.PLAYER_AP_POOL_MAX:
+            await interaction.response.send_message(
+                f"Player AP Pool maxed out at {new_ap}. Extra AP was ignored."
+            )
+            return
+
+        await interaction.response.send_message(
+            f"Added {amount} AP to the player pool!\nPlayer AP Pool: {new_ap}."
+        )
