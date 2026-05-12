@@ -10,6 +10,7 @@ from src.caps import view_caps_commands
 from src.caps import award_caps_commands
 from src.caps import remove_caps_commands
 from src.action_points import view_ap_commands
+from src.action_points import add_ap_player_commands
 
 from src import database_pg as database
 
@@ -36,6 +37,7 @@ view_caps_commands(bot)
 award_caps_commands(bot)
 remove_caps_commands(bot)
 view_ap_commands(bot)
+add_ap_player_commands(bot)
 
 
 
