@@ -15,4 +15,4 @@ from src import database_pg as database
 def view_ap_commands(bot: commands.Bot):
     @bot.tree.command(name="view_ap" , description="Allow to view AP on both sides")
     async def view_ap(interaction: discord.Interaction):
-        await interaction.response.send_message(f"Players AP: {database.get_ap("PLAYER_AP_POOL")} \n GM AP: {database.get_ap("GM_AP_POOL")}")
+        await interaction.response.send_message(f"Players AP: {database.get_ap('PLAYER_AP_POOL')} \n GM AP: {database.get_ap('GM_AP_POOL')}")
