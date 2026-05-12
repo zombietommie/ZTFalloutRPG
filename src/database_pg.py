@@ -8,17 +8,12 @@ GM_AP_POOL = "gm"
 
 
 def get_connection():
-    # We will get the connection URL from the environment variables
-    # The cloud provider will give you a URL like: postgresql://user:password@host:port/dbname
     db_url = os.getenv("DATABASE_URL")
     return psycopg2.connect(db_url)
 
 def setup_database():
     conn = get_connection()
     cursor = conn.cursor()
-
-    # PostgreSQL uses SERIAL for auto-incrementing integers or BIGINT for Discord IDs
-    # and ON CONFLICT instead of INSERT OR IGNORE
 
     # This is to create a new table if it doesn't exist already.
     cursor.execute('''
@@ -96,40 +91,6 @@ def award_caps(user_id, caps):
     ''', (caps, user_id))
     conn.commit()
     conn.close()
-
-def remove_caps_clamped(user_id: int, amount: int) -> int:
-    """Remove caps from a user, clamping the result to a minimum of 0.
-    
-    This function performs an atomic UPDATE operation that subtracts the specified
-    amount from the user's cap balance, ensuring the result never goes below 0.
-    
-    :param user_id: The Discord user ID
-    :param amount: Number of caps to remove
-    :return: The new cap value after removal
-    
-    Note: This assumes the user exists in the database. The caller should ensure
-    the user is inserted via insert_player() before calling this function.
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    try:
-        cursor.execute('''
-            UPDATE players
-            SET cap = GREATEST(cap - %s, 0)
-            WHERE user_id = %s
-            RETURNING cap
-        ''', (amount, user_id))
-        result = cursor.fetchone()
-        conn.commit()
-        
-        if result:
-            return result[0]
-        # Return 0 if user doesn't exist (shouldn't happen if insert_player was called first)
-        return 0
-    finally:
-        conn.close()
-
 
 def set_player_caps(user_id, cap):
     conn = get_connection()
