@@ -155,7 +155,7 @@ def get_ap(pool_name: str) -> int:
     return 0
 
 
-def add_ap_clamped(pool_name: str, amount: int) -> int:
+def add_ap(pool_name: str, amount: int) -> int:
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
@@ -172,7 +172,7 @@ def add_ap_clamped(pool_name: str, amount: int) -> int:
     return 0
 
 
-def spend_ap_clamped(pool_name: str, amount: int) -> int:
+def spend_ap(pool_name: str, amount: int) -> int:
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''

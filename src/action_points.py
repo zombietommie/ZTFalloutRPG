@@ -21,7 +21,7 @@ def view_ap_commands(bot: commands.Bot):
 
 # Adding AP
 def add_ap_player_commands(bot: commands.Bot):
-    @bot.tree.command(name="add_ap", description="[GM-only] Add AP to the pool of players.")
+    @bot.tree.command(name="add_ap_player", description="[GM-only] Add AP to the pool of players.")
     @app_commands.describe(
         amount="The amount of AP to award."
     )
@@ -30,8 +30,9 @@ def add_ap_player_commands(bot: commands.Bot):
         if amount <= 0:
             await interaction.response.send_message("You must enter a positive number of AP", ephemeral=True)
             return
-        if database.get_ap('PLAYER_AP_POOL') >= 5:
+        elif database.get_ap('PLAYER_AP_POOL') >= 5:
             await interaction.response.send_message("Player AP Pool maxed out, cannot add!")
             return
-        database.add_ap_clamped('PLAYER_AP_POOL', amount)
+
+        database.add_ap('PLAYER_AP_POOL', amount)
         await interaction.response.send_message(f"Added {amount} AP to the player pool!\nPlayer AP Pool: {database.get_ap('PLAYER_AP_POOL')}.")
