@@ -21,7 +21,7 @@ def view_ap_commands(bot: commands.Bot):
 
 # Adding AP
 def add_ap_player_commands(bot: commands.Bot):
-    @bot.tree.commands(name="add_ap", description="[GM-only] Add AP to the pool of players.")
+    @bot.tree.command(name="add_ap", description="[GM-only] Add AP to the pool of players.")
     @app_commands.describe(
         amount="The amount of AP to award."
     )
