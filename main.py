@@ -9,6 +9,7 @@ from src.caps import view_caps_commands
 from src.caps import award_caps_commands
 from src.caps import remove_caps_commands
 from src.hello import hello
+from src import database_pg as database
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 intents = discord.Intents.default()
@@ -22,6 +23,7 @@ async def setup_hook():
 
 @bot.event
 async def on_ready():
+    database.setup_database()
     print(f'We have logged in as {bot.user}')
     print(f'discord.py API version: {discord.__version__}')
 
