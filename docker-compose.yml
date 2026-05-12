@@ -10,6 +10,9 @@ services:
     environment:
       # We override the localhost URL to use the internal docker network name 'db'
       - DATABASE_URL=postgresql://fallout_admin:${POSTGRES_PASSWORD}@db:5432/fallout_rpg
+      - LOG_FILE=/app/logs/discord.log
+    volumes:
+      - ./logs:/app/logs
 
   db:
     image: postgres:18

@@ -10,3 +10,5 @@ I want to make this a simple bot first to allow simplified Play by Post on Disco
 
 Written in python, using the discord.py
 Database will be SQLite, possible integrate into PostgreSQL.
+
+Logs are written to `logs/discord.log` when running locally or through Docker Compose.
