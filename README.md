@@ -12,3 +12,10 @@ Written in python, using the discord.py
 Database will be SQLite, possible integrate into PostgreSQL.
 
 Logs are written to `logs/discord.log` when running locally or through Docker Compose.
+
+## Features:
+- Hello
+- Roll 2d20 dice
+- Manage AP for GM and Player Pools
+- Caps Management
+
